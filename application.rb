@@ -14,4 +14,14 @@ class Application < Sinatra::Application
   get '/' do
     erb :index
   end
+
+  get '/register' do
+    erb :register
+  end
+
+  post '/' do
+    erb :index
+    "Hello, #{params[:Email]}"
+  end
+
 end

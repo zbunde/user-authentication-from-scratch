@@ -8,5 +8,10 @@ feature 'Homepage' do
     visit '/'
 
     expect(page).to have_content 'Welcome!'
+    click_on 'Register'
+    fill_in 'Email', :with => 'joe@example.com'
+    fill_in 'Password', :with => 'password'
+    click_on 'Register'
+    expect(page).to have_content 'Hello, joe@example.com'
   end
 end
