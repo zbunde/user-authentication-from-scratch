@@ -27,3 +27,9 @@ details.
 ## Migrations on Heroku
 To run the migrations on heroku, run `heroku run 'rake db:migrate'`. If you
 do not have a Heroku configuration variable named DATABASE_URL, then you will need to create one.
+
+
+##URLS
+http://zach-authentication-production.herokuapp.com/
+http://zach-authentication-development.herokuapp.com/
+https://www.pivotaltracker.com/n/projects/1060092

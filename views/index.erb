@@ -1,6 +1,13 @@
+<% if session[:user_id] %>
+  <p>Hello, <%= email %> </p>
+  <a href="/logout">Logout</a>
+<% else %>
   <p>Welcome!</p>
-  <p id="insert"><%= session[:insert] %></p>
-  <% session.delete(:insert) %>
-<a href="/register">Register</a>
-<a href="/">Logout</a>
+  <a href="/register">Register</a>
+  <a href="/login">Login</a>
+<% end %>
+
+
+
+
 

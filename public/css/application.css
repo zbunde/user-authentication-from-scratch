@@ -1,3 +1,44 @@
 body {
     background-color: orange;
 }
+
+.column1 {
+    font-weight: bold;
+    margin: auto;
+    margin-top: 5%;
+    margin-left: 30%;
+    font-family: 'Sniglet', cursive;
+    font-size: 15px;
+    padding: 5px;
+    width: 200px;
+
+}
+.column2 {
+    font-weight: bold;
+    margin: auto;
+    margin-top: 5%;
+    margin-left: 30%;
+    font-family: 'Sniglet', cursive;
+    font-size: 15px;
+
+
+}
+
+.title {
+    margin-left: 12%;
+    font-family: 'Sniglet', cursive;
+    font-size: 60px;
+
+}
+
+.button {
+    height: 40px;
+    width: 100px;
+    display: block;
+    font-size: 14px;
+    color: white;
+    border-color: black;
+    -moz-box-shadow:    3px 3px 0px 0px #000000;
+    -webkit-box-shadow: 3px 3px 0px 0px #000000;
+    box-shadow:         3px 3px 0px 0px #000000;
+}

@@ -1,6 +1,9 @@
 require 'sinatra/base'
 
+
 class Application < Sinatra::Application
+
+  enable :sessions
 
   def initialize(app=nil)
     super(app)
@@ -12,11 +15,16 @@ class Application < Sinatra::Application
   end
 
   user_table = DB[:users]
-  user_array = user_table.to_a
-  enable :sessions
+
 
   get '/' do
-    erb :index, :locals => {user_array: user_table.to_a}
+    if session[:user_id]
+      id = session[:user_id]
+      email = user_table[:id => id][:email]
+      erb :index, :locals => {:email => email}
+    else
+      erb :index
+    end
   end
 
   get '/register' do
@@ -24,15 +32,23 @@ class Application < Sinatra::Application
   end
 
   post '/' do
-    user_array.each do |hash|
-      if hash[:email]== nil
-        redirect '/'
-      else
-        user_table.insert({:email => params[:Email], :password => params[:Password]})
-        session[:insert] = "Hello, #{hash[:email]}"
-      end
-    end
-    erb :index
+    id = user_table.insert(:email => params[:Email], :password => params[:Password])
+    session[:user_id] = id
+
+    redirect '/'
+  end
+
+  #get '/logout' do
+  #  session[:user_id]
+  #  id = session[:user_id]
+  #  email = user_table[:id => id][:email]
+  #  erb :index, :locals => {:email => email}
+  #end
+
+  get '/logout' do
+    session[:user_id] = false
+    redirect '/'
   end
 
 end
+
