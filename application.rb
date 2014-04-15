@@ -11,8 +11,12 @@ class Application < Sinatra::Application
 
   end
 
+  user_table = DB[:users]
+  user_array = user_table.to_a
+  enable :sessions
+
   get '/' do
-    erb :index
+    erb :index, :locals => {user_array: user_table.to_a}
   end
 
   get '/register' do
@@ -20,8 +24,15 @@ class Application < Sinatra::Application
   end
 
   post '/' do
+    user_array.each do |hash|
+      if hash[:email]== nil
+        redirect '/'
+      else
+        user_table.insert({:email => params[:Email], :password => params[:Password]})
+        session[:insert] = "Hello, #{hash[:email]}"
+      end
+    end
     erb :index
-    "Hello, #{params[:Email]}"
   end
 
 end

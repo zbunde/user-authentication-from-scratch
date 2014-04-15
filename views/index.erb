@@ -1,5 +1,6 @@
-<p>
-  Welcome!
-</p>
-
+  <p>Welcome!</p>
+  <p id="insert"><%= session[:insert] %></p>
+  <% session.delete(:insert) %>
 <a href="/register">Register</a>
+<a href="/">Logout</a>
+

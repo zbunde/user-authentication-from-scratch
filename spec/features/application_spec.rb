@@ -4,6 +4,10 @@ require 'capybara/rspec'
 Capybara.app = Application
 
 feature 'Homepage' do
+  before do
+    DB[:users].delete
+  end
+
   scenario 'Shows the welcome message' do
     visit '/'
 
@@ -13,5 +17,7 @@ feature 'Homepage' do
     fill_in 'Password', :with => 'password'
     click_on 'Register'
     expect(page).to have_content 'Hello, joe@example.com'
+    click_on 'Logout'
+    expect(page).to have_content 'Welcome!'
   end
 end
