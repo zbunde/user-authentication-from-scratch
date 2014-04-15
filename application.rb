@@ -38,17 +38,27 @@ class Application < Sinatra::Application
     redirect '/'
   end
 
-  #get '/logout' do
-  #  session[:user_id]
-  #  id = session[:user_id]
-  #  email = user_table[:id => id][:email]
-  #  erb :index, :locals => {:email => email}
-  #end
 
   get '/logout' do
     session[:user_id] = false
     redirect '/'
   end
 
-end
+  get '/login' do
 
+    erb :login
+
+  end
+
+  post '/login' do
+    user = user_table[email: params[:Email]]
+    password = params[:Password]
+
+    if password == user[:password]
+      session[:user_id] = user[:id]
+      redirect '/'
+    else
+      redirect '/'
+    end
+  end
+end
