@@ -10,58 +10,72 @@ class Application < Sinatra::Application
   user_table = DB[:users]
 
   get '/' do
-    if session[:user_id]
-      id = session[:user_id]
-      email = user_table[:id => id][:email]
-        erb :index, :locals => {:email => email}
-    else
-        erb :index
-    end
-  end
 
+    id = session[:user_id]
+    user = user_table.where(id: id).first
+
+    erb :index, :locals => {user: user}
+
+  end
   get '/register' do
     erb :register, :locals => {:error_message => nil}
   end
 
   post '/register' do
-    encrypted_password = BCrypt::Password.create(params[:Password])
 
-    if params[:Email].empty?
+    password = params[:Password]
+    email = params[:Email]
+
+    if email.empty?
       erb :register, locals: {error_message: "Email cannot be blank"}
-    elsif user_table[email: (params[:Email])]
+    elsif user_table[email: email]
       erb :register, locals: {error_message: "Email address already exists"}
-    elsif params[:Password].empty?
+    elsif password.empty?
       erb :register, locals: {error_message: "Password cannot be blank"}
-    elsif params[:Password].length < 3
+    elsif password.length < 3
       erb :register, locals: {error_message: "Password must be longer than 2 characters"}
-    elsif params[:Password] != params[:Password_Confirmation]
+    elsif password != params[:Password_Confirmation]
       erb :register, locals: {error_message: "Password must match Password Confirmation"}
-    elsif user_table.insert(:email => params[:Email], :password => encrypted_password)
-      id = user_table.insert(:email => params[:Email], :password => encrypted_password)
+    else
+      encrypted_password = BCrypt::Password.create(password)
+      id = user_table.insert(:email => email, :password => encrypted_password)
       session[:user_id] = id
       redirect '/'
     end
-  end
-  get '/logout' do
-    session[:user_id] = false
-    redirect '/'
   end
 
   get '/login' do
     erb :login, locals: {error_message: nil}
   end
   post '/login' do
-    user = user_table[email: params[:Email]]
+    email = params[:Email]
     password = params[:Password]
 
-     if user.nil?
-           erb :login, locals: {error_message: "Invalid email or password"}
-     elsif BCrypt::Password.new(user[:password]) == password
-          session[:user_id] = user[:id]
-          redirect '/'
+    user = user_table.where(email: email).to_a.first
 
-    elsif BCrypt::Password.new(user[:password]) != password
-          erb :login, locals: {error_message: "Invalid email or password"}
+
+    if user.nil?
+      erb :login, locals: {error_message: "Invalid email or password"}
+
+    elsif BCrypt::Password.new(user[:password]) == password
+      session[:user_id] = user[:id]
+      redirect '/'
+
+    else
+      erb :login, locals: {error_message: "Invalid email or password"}
+    end
+  end
+  get '/logout' do
+    session.clear
+    redirect '/'
+  end
+  get '/users' do
+    id = session[:user_id]
+    user = user_table.where(id: id).to_a.first
+    if user[:admin]
+      erb :users, locals: {users: user_table.to_a}
+    else
+      erb :index, locals: {error_message: "You must be an admin to view this page"}
     end
   end
 end

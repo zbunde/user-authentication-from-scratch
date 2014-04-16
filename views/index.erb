@@ -1,11 +1,18 @@
-<% if session[:user_id] %>
-  <p>Hello, <%= email %> </p>
-  <a href="/logout">Logout</a>
-<% else %>
+<% if user.nil? %>
   <p>Welcome!</p>
   <a href="/register">Register</a>
   <a href="/login">Login</a>
+
+<% else %>
+  <p>Hello, <%= user[:email] %> </p>
+  <a href="/logout">Logout</a>
+  <% if user[:admin] %>
+ <p> Welcome Admin!</p>
+  <a href="/users">View all users</a>
+  <% end %>
 <% end %>
+
+
 
 
 

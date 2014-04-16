@@ -106,6 +106,21 @@ feature 'Homepage' do
     click_on 'Register'
     expect(page).to have_no_content 'Hello, joe@example.com'
     expect(page).to have_content 'Password must match Password Confirmation'
-
+  end
+  scenario 'Admin can see Users list' do
+    DB[:users].insert(email: 'cheers@cheers.com', password: BCrypt::Password.create('whatever'), admin: true)
+    DB[:users].insert(email: 'google.com', password: "password", admin: false)
+    DB[:users].insert(email: 'foogle.com', password: "password", admin: false)
+    visit '/'
+    click_on 'Login'
+    fill_in 'Email', :with => 'cheers@cheers.com'
+    fill_in 'Password', :with => 'whatever'
+    click_on 'Login'
+    expect(page).to have_content 'Welcome Admin!'
+    click_on 'View all users'
+    expect(page).to have_content 'google'
+    expect(page).to have_content 'foogle'
+    expect(page).to have_content '2'
+    expect(page).to have_content '3'
   end
 end
