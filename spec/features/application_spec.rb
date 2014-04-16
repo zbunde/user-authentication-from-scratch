@@ -120,7 +120,6 @@ feature 'Homepage' do
     click_on 'View all users'
     expect(page).to have_content 'google'
     expect(page).to have_content 'foogle'
-    expect(page).to have_content '2'
-    expect(page).to have_content '3'
+  
   end
 end

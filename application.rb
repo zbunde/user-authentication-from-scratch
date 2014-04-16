@@ -47,28 +47,32 @@ class Application < Sinatra::Application
   get '/login' do
     erb :login, locals: {error_message: nil}
   end
+
   post '/login' do
     email = params[:Email]
     password = params[:Password]
 
     user = user_table.where(email: email).to_a.first
 
+    if email.empty?
+      erb :login, locals: {error_message: "Email must not be blank"}
 
-    if user.nil?
+    elsif user.nil?
       erb :login, locals: {error_message: "Invalid email or password"}
 
     elsif BCrypt::Password.new(user[:password]) == password
       session[:user_id] = user[:id]
       redirect '/'
-
-    else
+    elsif  BCrypt::Password.new(user[:password]) != password
       erb :login, locals: {error_message: "Invalid email or password"}
     end
   end
+
   get '/logout' do
     session.clear
     redirect '/'
   end
+
   get '/users' do
     id = session[:user_id]
     user = user_table.where(id: id).to_a.first
