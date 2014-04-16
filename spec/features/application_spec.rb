@@ -82,4 +82,12 @@ feature 'Homepage' do
     click_on 'Register'
     expect(page).to have_content 'Email address already exists'
   end
+  scenario 'User attempts to register an account with a password less than 3 characters' do
+    visit '/'
+    click_on 'Register'
+    fill_in 'Email', :with => 'joe@example.com'
+    fill_in 'Password', :with => '22'
+    click_on 'Register'
+    expect(page).to have_content 'Password must be longer than 2 characters'
+  end
 end

@@ -28,10 +28,12 @@ class Application < Sinatra::Application
 
     if params[:Email].empty?
       erb :register, locals: {error_message: "Email cannot be blank"}
-    elsif params[:Password].empty?
-      erb :register, locals: {error_message: "Password cannot be blank"}
     elsif user_table[email: (params[:Email])]
       erb :register, locals: {error_message: "Email address already exists"}
+    elsif params[:Password].empty?
+      erb :register, locals: {error_message: "Password cannot be blank"}
+    elsif params[:Password].length < 3
+      erb :register, locals: {error_message: "Password must be longer than 2 characters"}
     elsif user_table.insert(:email => params[:Email], :password => encrypted_password)
       id = user_table.insert(:email => params[:Email], :password => encrypted_password)
       session[:user_id] = id
