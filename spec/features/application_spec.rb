@@ -8,9 +8,8 @@ feature 'Homepage' do
     DB[:users].delete
   end
 
-  scenario 'Shows the welcome message' do
+  scenario 'User can Register' do
     visit '/'
-
     expect(page).to have_content 'Welcome!'
     click_on 'Register'
     fill_in 'Email', :with => 'joe@example.com'
@@ -68,5 +67,19 @@ feature 'Homepage' do
     fill_in 'Password', :with => ''
     click_on 'Register'
     expect(page).to have_content 'Password cannot be blank'
+  end
+  scenario 'User attempts to register an email that already exists' do
+    visit '/'
+    click_on 'Register'
+    fill_in 'Email', :with => 'joe@example.com'
+    fill_in 'Password', :with => 'password'
+    click_on 'Register'
+    expect(page).to have_content 'Hello, joe@example.com'
+    click_on 'Logout'
+    click_on 'Register'
+    fill_in 'Email', :with => 'joe@example.com'
+    fill_in 'Password', :with => 'anything'
+    click_on 'Register'
+    expect(page).to have_content 'Email address already exists'
   end
 end
