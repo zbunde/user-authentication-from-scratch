@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'bcrypt'
 
 
 class Application < Sinatra::Application
@@ -32,7 +33,10 @@ class Application < Sinatra::Application
   end
 
   post '/' do
-    id = user_table.insert(:email => params[:Email], :password => params[:Password])
+    encrypted_password = BCrypt::Password.create(params[:Password])
+
+    id = user_table.insert(:email => params[:Email], :password => encrypted_password)
+
     session[:user_id] = id
 
     redirect '/'
@@ -54,8 +58,9 @@ class Application < Sinatra::Application
     user = user_table[email: params[:Email]]
     password = params[:Password]
 
-    if password == user[:password]
+    if BCrypt::Password.new(user[:password]) == password
       session[:user_id] = user[:id]
+
       redirect '/'
     else
       redirect '/'
