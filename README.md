@@ -31,5 +31,5 @@ do not have a Heroku configuration variable named DATABASE_URL, then you will ne
 
 ##URLS
 http://zach-authentication-production.herokuapp.com/
-http://zach-authentication-development.herokuapp.com/
+http://zach-authentication-staging.herokuapp.com/
 https://www.pivotaltracker.com/n/projects/1060092
