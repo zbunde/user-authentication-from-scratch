@@ -32,14 +32,21 @@ class Application < Sinatra::Application
     erb :register
   end
 
-  post '/' do
+  post '/register' do
     encrypted_password = BCrypt::Password.create(params[:Password])
+    if params[:Email].empty?
 
-    id = user_table.insert(:email => params[:Email], :password => encrypted_password)
+      erb :login, locals: {error_message: "Email cannot be blank"}
+    elsif params[:Password].empty?
 
-    session[:user_id] = id
+      erb :login, locals: {error_message: "Password cannot be blank"}
 
-    redirect '/'
+    elsif user_table.insert(:email => params[:Email], :password => encrypted_password)
+      id = user_table.insert(:email => params[:Email], :password => encrypted_password)
+      session[:user_id] = id
+
+      redirect '/'
+    end
   end
 
 
@@ -49,11 +56,8 @@ class Application < Sinatra::Application
   end
 
   get '/login' do
-
     erb :login, locals: {error_message: nil}
   end
-
-
   post '/login' do
     user = user_table[email: params[:Email]]
     password = params[:Password]
@@ -63,13 +67,13 @@ class Application < Sinatra::Application
       erb :login, locals: {error_message: "Invalid email or password"}
 
     elsif BCrypt::Password.new(user[:password]) == password
-        session[:user_id] = user[:id]
+      session[:user_id] = user[:id]
 
-        redirect '/'
+      redirect '/'
 
     elsif BCrypt::Password.new(user[:password]) != password
 
       erb :login, locals: {error_message: "Invalid email or password"}
-      end
     end
   end
+end

@@ -51,4 +51,22 @@ feature 'Homepage' do
     expect(page).to have_no_content 'Hello, joe@example.com'
 
   end
+  scenario 'User attempts to register with blank email address' do
+    visit '/'
+    expect(page).to have_content 'Welcome!'
+    click_on 'Register'
+    fill_in 'Email', :with => ''
+    fill_in 'Password', :with => ''
+    click_on 'Register'
+    expect(page).to have_content 'Email cannot be blank'
+  end
+  scenario 'User attempts to register with blank email address' do
+    visit '/'
+    expect(page).to have_content 'Welcome!'
+    click_on 'Register'
+    fill_in 'Email', :with => 'email@email.com'
+    fill_in 'Password', :with => ''
+    click_on 'Register'
+    expect(page).to have_content 'Password cannot be blank'
+  end
 end
