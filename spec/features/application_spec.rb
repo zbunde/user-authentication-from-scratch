@@ -33,7 +33,7 @@ feature 'Homepage' do
     fill_in 'Password', :with => 'whatever'
     click_on 'Login'
     expect(page).to have_no_content 'Hello, hello'
-    expect(page).to have_content 'Email does not exist'
+    expect(page).to have_content 'Invalid email or password'
   end
   scenario 'User attempts to login with incorrect password' do
     visit '/'
@@ -47,7 +47,7 @@ feature 'Homepage' do
     fill_in 'Email', :with => 'joe@example.com'
     fill_in 'Password', :with => 'incorrect_password'
     click_on 'Login'
-    expect(page).to have_content 'Password Incorrect'
+    expect(page).to have_content 'Invalid email or password'
     expect(page).to have_no_content 'Hello, joe@example.com'
 
   end

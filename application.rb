@@ -60,7 +60,7 @@ class Application < Sinatra::Application
 
     if user.nil?
 
-      erb :login, locals: {error_message: "Email does not exist"}
+      erb :login, locals: {error_message: "Invalid email or password"}
 
     elsif BCrypt::Password.new(user[:password]) == password
         session[:user_id] = user[:id]
@@ -69,7 +69,7 @@ class Application < Sinatra::Application
 
     elsif BCrypt::Password.new(user[:password]) != password
 
-      erb :login, locals: {error_message: "Password Incorrect"}
+      erb :login, locals: {error_message: "Invalid email or password"}
       end
     end
   end
