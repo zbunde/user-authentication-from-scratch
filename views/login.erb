@@ -1,3 +1,10 @@
+<% if error_message %>
+  <div class="error">
+    <%= error_message %>
+    <h1>Login</h1>
+  </div>
+<% end %>
+
 <form action="/login" method="post">
   <input type="text" name="Email"/>
   <input type="password" name="Password"/>

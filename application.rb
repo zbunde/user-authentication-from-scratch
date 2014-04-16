@@ -50,20 +50,26 @@ class Application < Sinatra::Application
 
   get '/login' do
 
-    erb :login
-
+    erb :login, locals: {error_message: nil}
   end
+
 
   post '/login' do
     user = user_table[email: params[:Email]]
     password = params[:Password]
 
-    if BCrypt::Password.new(user[:password]) == password
-      session[:user_id] = user[:id]
+    if user.nil?
 
-      redirect '/'
-    else
-      redirect '/'
+      erb :login, locals: {error_message: "Email does not exist"}
+
+    elsif BCrypt::Password.new(user[:password]) == password
+        session[:user_id] = user[:id]
+
+        redirect '/'
+
+    elsif BCrypt::Password.new(user[:password]) != password
+
+      erb :login, locals: {error_message: "Password Incorrect"}
+      end
     end
   end
-end
