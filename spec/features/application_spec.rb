@@ -14,6 +14,7 @@ feature 'Homepage' do
     click_on 'Register'
     fill_in 'Email', :with => 'joe@example.com'
     fill_in 'Password', :with => 'password'
+    fill_in 'Password_Confirmation', :with => 'password'
     click_on 'Register'
     expect(page).to have_content 'Hello, joe@example.com'
     click_on 'Logout'
@@ -39,6 +40,7 @@ feature 'Homepage' do
     click_on 'Register'
     fill_in 'Email', :with => 'joe@example.com'
     fill_in 'Password', :with => 'password'
+    fill_in 'Password_Confirmation', :with => 'password'
     click_on 'Register'
     expect(page).to have_content 'Hello, joe@example.com'
     click_on 'Logout'
@@ -56,6 +58,7 @@ feature 'Homepage' do
     click_on 'Register'
     fill_in 'Email', :with => ''
     fill_in 'Password', :with => ''
+    fill_in 'Password_Confirmation', :with => ''
     click_on 'Register'
     expect(page).to have_content 'Email cannot be blank'
   end
@@ -65,6 +68,7 @@ feature 'Homepage' do
     click_on 'Register'
     fill_in 'Email', :with => 'email@email.com'
     fill_in 'Password', :with => ''
+    fill_in 'Password_Confirmation', :with => ''
     click_on 'Register'
     expect(page).to have_content 'Password cannot be blank'
   end
@@ -73,12 +77,14 @@ feature 'Homepage' do
     click_on 'Register'
     fill_in 'Email', :with => 'joe@example.com'
     fill_in 'Password', :with => 'password'
+    fill_in 'Password_Confirmation', :with => 'password'
     click_on 'Register'
     expect(page).to have_content 'Hello, joe@example.com'
     click_on 'Logout'
     click_on 'Register'
     fill_in 'Email', :with => 'joe@example.com'
     fill_in 'Password', :with => 'anything'
+    fill_in 'Password_Confirmation', :with => 'anything'
     click_on 'Register'
     expect(page).to have_content 'Email address already exists'
   end
@@ -87,7 +93,19 @@ feature 'Homepage' do
     click_on 'Register'
     fill_in 'Email', :with => 'joe@example.com'
     fill_in 'Password', :with => '22'
+    fill_in 'Password_Confirmation', :with => '22'
     click_on 'Register'
     expect(page).to have_content 'Password must be longer than 2 characters'
+  end
+  scenario 'Password must match Password Confirmation' do
+    visit '/'
+    click_on 'Register'
+    fill_in 'Email', :with => 'joe@example.com'
+    fill_in 'Password', :with => 'password'
+    fill_in 'Password_Confirmation', :with => 'notpassword'
+    click_on 'Register'
+    expect(page).to have_no_content 'Hello, joe@example.com'
+    expect(page).to have_content 'Password must match Password Confirmation'
+
   end
 end

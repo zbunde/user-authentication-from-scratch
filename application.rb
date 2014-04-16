@@ -34,6 +34,8 @@ class Application < Sinatra::Application
       erb :register, locals: {error_message: "Password cannot be blank"}
     elsif params[:Password].length < 3
       erb :register, locals: {error_message: "Password must be longer than 2 characters"}
+    elsif params[:Password] != params[:Password_Confirmation]
+      erb :register, locals: {error_message: "Password must match Password Confirmation"}
     elsif user_table.insert(:email => params[:Email], :password => encrypted_password)
       id = user_table.insert(:email => params[:Email], :password => encrypted_password)
       session[:user_id] = id
