@@ -62,7 +62,7 @@ feature 'Homepage' do
     click_on 'Register'
     expect(page).to have_content 'Email cannot be blank'
   end
-  scenario 'User attempts to register with blank email address' do
+  scenario 'User attempts to register with blank password' do
     visit '/'
     expect(page).to have_content 'Welcome!'
     click_on 'Register'
@@ -106,6 +106,16 @@ feature 'Homepage' do
     click_on 'Register'
     expect(page).to have_no_content 'Hello, joe@example.com'
     expect(page).to have_content 'Password must match Password Confirmation'
+  end
+  scenario 'Email must be valid email address' do
+    visit '/'
+    click_on 'Register'
+    fill_in 'Email', :with => 'joe.com'
+    fill_in 'Password', :with => 'password'
+    fill_in 'Password_Confirmation', :with => 'password'
+    click_on 'Register'
+    expect(page).to have_content 'Email must be valid'
+
   end
   scenario 'Admin can see Users list' do
     DB[:users].insert(email: 'cheers@cheers.com', password: BCrypt::Password.create('whatever'), admin: true)
