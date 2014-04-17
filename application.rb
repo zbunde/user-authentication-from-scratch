@@ -11,7 +11,6 @@ class Application < Sinatra::Application
   get '/' do
     id = session[:user_id]
     user = user_table.where(id: id).first
-
     erb :index, :locals => {user: user}
   end
 
@@ -23,7 +22,7 @@ class Application < Sinatra::Application
     password = params[:Password]
     email = params[:Email]
 
-    if email.empty?
+    if email.strip.empty?
       erb :register, locals: {error_message: "Email cannot be blank"}
     elsif user_table[email: email]
       erb :register, locals: {error_message: "Email address already exists"}
@@ -52,15 +51,14 @@ class Application < Sinatra::Application
     password = params[:Password]
     user = user_table.where(email: email).to_a.first
 
-    if email.empty?
+    if email.strip.empty?
       erb :login, locals: {error_message: "Email must not be blank"}
-    elsif user.nil?
+    elsif user.nil? || BCrypt::Password.new(user[:password]) != password
       erb :login, locals: {error_message: "Invalid email or password"}
-    elsif BCrypt::Password.new(user[:password]) == password
+    else BCrypt::Password.new(user[:password]) == password
       session[:user_id] = user[:id]
+
       redirect '/'
-    elsif  BCrypt::Password.new(user[:password]) != password
-      erb :login, locals: {error_message: "Invalid email or password"}
     end
   end
 
@@ -71,7 +69,7 @@ class Application < Sinatra::Application
 
   get '/users' do
     id = session[:user_id]
-    user = user_table.where(id: id).to_a.first
+    user = user_table[id: id]
 
     if user[:admin]
       erb :users, locals: {users: user_table.to_a}
