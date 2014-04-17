@@ -20,7 +20,6 @@ class Application < Sinatra::Application
   end
 
   post '/register' do
-
     password = params[:Password]
     email = params[:Email]
 
